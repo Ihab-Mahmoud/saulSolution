@@ -1,0 +1,41 @@
+﻿@model List<Product>
+
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient mt-0 py-3">
+        <div class="row">
+            <div class="text-center">
+                <h2 class="text-white ">
+                    Product List
+                </h2>
+            </div>
+            <div class="text-end">
+                <a asp-controller="Product" asp-action="Upsert" class="btn btn-primary rounded-2">
+                    <i class="bi bi-plus-circle"></i>
+                    Add new Product
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body pb-4">
+        <table id="tblData" class="table display table-bordered table-striped">
+            <thead>
+
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>ISBN</th>
+                <th>ListPrice</th>
+                <th>Category </th>
+                 <th> </th>
+
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/Product.js"></script>
+}

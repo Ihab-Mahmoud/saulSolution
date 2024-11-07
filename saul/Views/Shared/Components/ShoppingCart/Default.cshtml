@@ -1,0 +1,14 @@
+﻿@model int
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+
+@{
+    var cartItemCount = HttpContextAccessor.HttpContext.Session.GetInt32(SD.ShoppingCart) ?? 0;
+}
+
+<li class="nav-item">
+    <a class="nav-link" asp-area="Customer" asp-controller="Card" asp-action="Index">
+        <i class="bi bi-cart"></i>(@cartItemCount)
+    </a>
+</li>

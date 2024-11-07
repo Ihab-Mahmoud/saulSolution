@@ -1,0 +1,17 @@
+﻿@model OrderDetail
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card text-center shadow-sm">
+                <img src="@Model.Product.ImageURL" width="70%" class="card-img-top img-fluid" alt="Order Image">
+                <div class="card-body">
+                    <h5 class="card-title">Order Confirmation</h5>
+                    <p class="card-text font-weight-bold">Order Number: @Model.OrderHeaderId</p>
+                    <p class="card-text">Thank you for your purchase! Your payment has been confirmed.</p>
+                    <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="btn btn-primary">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

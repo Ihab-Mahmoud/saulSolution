@@ -1,0 +1,42 @@
+﻿@model List<Category>
+
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient mt-0 py-3">
+        <div class="row">
+            <div class="text-center">
+                <h2 class="text-white ">
+                    Category List
+                </h2>
+            </div>
+            <div class="text-end">
+                <a asp-controller="Category" asp-action="Create" class="btn btn-primary rounded-2">
+                    <i class="bi bi-plus-circle"></i>
+                    Create new Category
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body pb-4">
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Name</th>
+                <th> Display Order</th>
+                <th></th>
+            </tr>
+            @foreach (var obj in Model.OrderBy(o => o.DisplayOrder))
+            {
+                <tr>
+                    <td>@obj.Name</td>
+                    <td>@obj.DisplayOrder</td>
+                    <td>
+                        <div class="btn-group w-75">
+                            <a asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary rounded-2 mx-3">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger rounded-2">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

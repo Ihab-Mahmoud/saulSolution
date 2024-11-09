@@ -138,7 +138,7 @@ namespace Saul.Areas.Customer.Controllers
             if (applicationUser.CompanyId.GetValueOrDefault() == 0)
             {
                 //regular customer
-                string domain = "https://localhost:7000/";
+                var domain = $"{Request.Scheme}://{Request.Host}/";
                 var options = new Stripe.Checkout.SessionCreateOptions
                 {
                     SuccessUrl = domain + $"customer/card/OrderConfirmation?id={obj.OrderHeader.Id}",

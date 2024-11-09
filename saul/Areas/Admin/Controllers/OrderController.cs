@@ -118,7 +118,8 @@ namespace Saul.Areas.Admin.Controllers
             OrderHeader orderHeader = _unitOfWork.orderHeader.Get(u => u.Id == orderVM.OrderHeader.Id, includeProperties: "ApplicationUser");
             IEnumerable<OrderDetail> orderDetails = _unitOfWork.orderDetail.GetAll(u => u.OrderHeaderId == orderVM.OrderHeader.Id, includeProperties: "Product");
 
-            string domain = "https://localhost:7000/";
+            var domain = $"{Request.Scheme}://{Request.Host}/";
+
             var options = new Stripe.Checkout.SessionCreateOptions
             {
                 SuccessUrl = domain + $"admin/order/PaymentConfirmation?OrderId={orderVM.OrderHeader.Id}",

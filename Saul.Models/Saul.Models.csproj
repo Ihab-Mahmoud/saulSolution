@@ -7,16 +7,16 @@
   </PropertyGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0-rc.1.24451.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0-rc.1.24451.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0-rc.1.24451.1">
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
 	
 	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App"/>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	  <ProjectReference Include="..\Saul.Utility\Saul.Utility.csproj" />
 	</ItemGroup>
 </Project>

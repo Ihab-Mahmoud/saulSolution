@@ -21,6 +21,8 @@ namespace Saul.DataAccess.Repository
 
         public IOrderDetailRepository orderDetail { get; private set; }
 
+        public IProductImageRepository productImage { get; private set; }
+        public IApplicationUserRepository applicationUser { get; private set; }
         public UnitOfWork (ApplicationDbContext db)
         {
             _db = db;
@@ -30,6 +32,8 @@ namespace Saul.DataAccess.Repository
             shoppingCard = new ShoppingCardRepository(db);
             orderHeader = new OrderHeaderRepository(db);
             orderDetail = new OrderDetailRepository(db);
+            productImage = new ProductImageRepository(db);
+            applicationUser = new ApplicationUserRepository(db);
 
         }
 

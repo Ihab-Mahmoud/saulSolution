@@ -42,6 +42,14 @@ namespace Saul.Areas.Customer.Controllers
                 ShoppingCards = shoppingCards,
                 OrderHeader=new()
             };
+
+            List<Product> products = _unitOfWork.product.GetAll(includeProperties: "Category,ProductImages").ToList();
+
+
+            foreach (var item in shoppingVM.ShoppingCards)
+            {
+                item.Product = products.Where( u=>u.Id == item.ProductId).FirstOrDefault(); 
+            }
             shoppingVM.OrderHeader.OrderTotal = priceTotal;
             return View(shoppingVM);
         }

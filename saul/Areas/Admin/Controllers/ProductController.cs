@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Saul.DataAccess.Repository.IRepository;
@@ -13,7 +14,7 @@ namespace Saul.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private IUnitOfWork _unitOfWork;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        private  IWebHostEnvironment _webHostEnvironment;
         public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
@@ -41,20 +42,28 @@ namespace Saul.Areas.Admin.Controllers
                 Product = new Product()
             };
 
+
+
             if (id == null)
 
             {
                 // create
-
+                
+                    productVM.Product.ProductImages = new List<ProductImage>() { };
+                
                 return View(productVM);
             }
             else
             {
                 // update
-                Product product = _unitOfWork.product.Get(u => u.Id == id, includeProperties: "Category");
+                Product product = _unitOfWork.product.Get(u => u.Id == id, includeProperties: "Category,ProductImages");
                 if (product == null)
                 {
                     return NotFound();
+                }
+                if (product.ProductImages == null)
+                {
+                    product.ProductImages = new List<ProductImage>() { };
                 }
                 productVM.Product = product;
                 return View(productVM);
@@ -66,36 +75,11 @@ namespace Saul.Areas.Admin.Controllers
 
 
         [HttpPost]
-        public IActionResult Upsert(ProductVM obj, IFormFile? formFile)
+        public IActionResult Upsert(ProductVM obj, List<IFormFile>? formFiles)
         {
             if (ModelState.IsValid && obj != null)
             {
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
-
-                if (formFile != null)
-                {
-                    if (!string.IsNullOrEmpty(obj?.Product?.ImageURL))
-                    {
-                        var oldImagePath = Path.Combine(wwwRootPath, obj?.Product?.ImageURL.TrimStart('\\'));
-                        if (System.IO.File.Exists(oldImagePath))
-                        {
-                            System.IO.File.Delete(oldImagePath);
-                        }
-                    }
-
-
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(formFile.FileName);
-                    string productPath = Path.Combine(wwwRootPath, @"images\product");
-
-                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
-                    {
-                        formFile.CopyTo(fileStream);
-                    }
-                    obj.Product.ImageURL = @"\images\product\" + fileName;
-
-
-                }
-
 
                 if (obj.Product.Id != 0)
                 {
@@ -107,6 +91,47 @@ namespace Saul.Areas.Admin.Controllers
                 }
 
                 _unitOfWork.save();
+                if (formFiles != null)
+                {
+                  
+                    foreach (var formFile in formFiles)
+                    {
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(formFile.FileName);
+                        string productPath = @"images\product\product-" + obj.Product.Id;
+                        string finalPath = Path.Combine(wwwRootPath, productPath);
+
+                        if (!Directory.Exists(finalPath))
+                        {
+                            Directory.CreateDirectory(finalPath);
+                        }
+
+                        using (var fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
+                        {
+                            formFile.CopyTo(fileStream);
+                        }
+
+                        string imagePath = @"\" +productPath + @"\" + fileName;
+
+                        ProductImage image = new ProductImage()
+                        {
+                            ImageURL = imagePath,
+                            ProductId = obj.Product.Id,
+                        };
+
+                        if (obj.Product.ProductImages==null)
+                        {
+                            obj.Product.ProductImages = new List<ProductImage>() { };
+                        }
+
+
+                        obj.Product.ProductImages.Add(image) ;
+                    }
+
+                    _unitOfWork.product.update(obj.Product);
+                    _unitOfWork.save();
+                }
+
+
                 TempData["success"] = "Product has been added successfully!";
                 return RedirectToAction("Index");
             }
@@ -125,6 +150,25 @@ namespace Saul.Areas.Admin.Controllers
 
         }
 
+        public IActionResult DeleteImage(int imageId)
+        {
+
+            ProductImage productImage = _unitOfWork.productImage.Get(u=>u.Id==imageId);
+
+            var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, productImage.ImageURL.TrimStart('\\'));
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+
+            _unitOfWork.productImage.Remove(productImage);
+            _unitOfWork.save();
+
+
+            return RedirectToAction(nameof(Upsert), new { id = productImage.ProductId });
+
+        }
+
         #region API CALLS
         [HttpGet]
         public IActionResult GetAll()
@@ -136,17 +180,25 @@ namespace Saul.Areas.Admin.Controllers
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            Product product = _unitOfWork.product.Get(u => u.Id == id, includeProperties: "Category");
+            Product product = _unitOfWork.product.Get(u => u.Id == id, includeProperties: "Category,ProductImages");
             if (product == null)
             {
                 return Json(new { success = "true", message = "Error While Deleting" });
             }
-
-            var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, product.ImageURL.TrimStart('\\'));
-            if (System.IO.File.Exists(oldImagePath))
+            string productPath = @"images\product\product-" + product.Id;
+            string finalPath = Path.Combine(_webHostEnvironment.WebRootPath, productPath);
+          
+            if (Directory.Exists(finalPath))
             {
-                System.IO.File.Delete(oldImagePath);
+                string[] filePaths = Directory.GetFiles(finalPath);
+                foreach (string filePath in filePaths) { 
+                System.IO.File.Delete(filePath);
+                }
+
+                Directory.Delete(finalPath);
             }
+
+
             _unitOfWork.product.Remove(product);
             _unitOfWork.save();
             return Json(new { success = "true", message = "Deleted Successfully" });

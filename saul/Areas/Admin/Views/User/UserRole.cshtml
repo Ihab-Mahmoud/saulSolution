@@ -1,0 +1,82 @@
+﻿@model UserRoleVM
+
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient">
+        <div class="row">
+            <div class="col-12 text-center text-white p-2">
+                <h2>User Role</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <form class="row" id="registerForm"  method="post">
+                    <input asp-for="@Model.ApplicationUser.Id" hidden />
+                    <h2 class="border-bottom text-center py-3 mb-4">
+                       
+                                <span>Update user account.</span>
+                    </h2>
+                    <div class="form-floating mb-3 col-md-12  ">
+                        <input asp-for="@Model.ApplicationUser.Name" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                        <label asp-for="@Model.ApplicationUser.Name" class="ms-3"></label>
+                        <span asp-validation-for="@Model.ApplicationUser.Name" class="text-danger"></span>
+                    </div>
+                   
+                    
+                        <div class="form-floating mb-3 col-md-6 ">
+                        <select asp-for="@Model.ApplicationUser.Role" asp-items="@Model.RoleList" class="form-control custom-select-arrow " id="roleSelect">
+                                <option disabled selected> --select option--</option>
+                            </select>
+                        </div>
+                        <div class="form-floating mb-3 col-md-6 " id="companySelectContainer">
+                        <select asp-for="@Model.ApplicationUser.CompanyId" asp-items="@Model.CompanyList" class="form-control custom-select-arrow ">
+                                <option disabled selected> --select option--</option>
+                            </select>
+                        </div>
+               
+                    <div class="row pt-2 w-100">
+                        <div class="col-6 col-mid-3">
+                            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary mb-3">Update</button>
+                        </div>
+                        <div class="col-6 col-mid-3 ">
+                            <a asp-controller="User" asp-action="Index" class="btn btn-secondary border rounded-2 w-100">
+                                Back to List
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+          
+        </div>
+
+    </div>
+
+</div>
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const companySelectContainer = document.getElementById("companySelectContainer");
+        $(document).ready(function () {
+            if (document.getElementById("roleSelect").value == "Company") {
+
+                companySelectContainer.style.display = "block"
+            } else{
+                companySelectContainer.style.display = "none"
+
+            } 
+        });
+        document.getElementById("roleSelect").addEventListener("change", function () {
+
+            if (this.value == "Company") {
+                companySelectContainer.style.display = "block";
+            } else {
+                companySelectContainer.style.display = "none";
+            }
+        });
+    </script>
+}

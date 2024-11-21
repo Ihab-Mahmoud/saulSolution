@@ -34,10 +34,7 @@ namespace Saul.DataAccess.Repository
                 product.Price50 = obj.Price50; 
                 product.Price100 = obj.Price100;
                 product.Title = obj.Title;
-                if (obj.ImageURL != null)
-                {
-                    product.ImageURL = obj.ImageURL;
-                }
+                product.ProductImages = obj.ProductImages;
             }
 
         }

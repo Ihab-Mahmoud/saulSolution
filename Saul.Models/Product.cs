@@ -46,8 +46,8 @@ namespace Saul.Models
         [ForeignKey("CategoryId")]
         public Category? Category { get; set; }
 
+        [DisplayName("Product Images")]
         [ValidateNever]
-        public string? ImageURL { get; set; } = "";
-
+        public List<ProductImage> ProductImages { get; set; }
     }
 }

@@ -59,11 +59,11 @@ namespace Saul.Areas.Admin.Controllers
             orderHeader.PostalCode = orderVM.OrderHeader.PostalCode;
             orderHeader.Region = orderVM.OrderHeader.Region;
 
-            if (string.IsNullOrEmpty(orderVM.OrderHeader.Carrier))
+            if (!string.IsNullOrEmpty(orderVM.OrderHeader.Carrier))
             {
                 orderHeader.Carrier = orderVM.OrderHeader.Carrier;
             }
-            if (string.IsNullOrEmpty(orderVM.OrderHeader.TrackingNumber))
+            if (!string.IsNullOrEmpty(orderVM.OrderHeader.TrackingNumber))
             {
                 orderHeader.TrackingNumber = orderVM.OrderHeader.TrackingNumber;
             }

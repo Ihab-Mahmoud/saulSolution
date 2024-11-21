@@ -14,6 +14,8 @@ namespace Saul.DataAccess.Repository.IRepository
         IShoppingCardRepository shoppingCard { get; }
         IOrderHeaderRepository orderHeader { get; }
         IOrderDetailRepository orderDetail { get; }
+        IProductImageRepository productImage { get; }
+        IApplicationUserRepository applicationUser { get; }
         void save();
     }
 }

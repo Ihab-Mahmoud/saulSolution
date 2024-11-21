@@ -23,18 +23,26 @@ namespace Saul.Areas.Customer.Controllers
         public IActionResult Index()
         {
 
-            IEnumerable<Product> products = _unitOfWork.product.GetAll(includeProperties:"Category");
+            IEnumerable<Product> products = _unitOfWork.product.GetAll(includeProperties:"Category,ProductImages");
+            foreach (var item in products)
+            {
+                if (item.ProductImages==null)
+                {
+                    item.ProductImages = new List<ProductImage>();
+                }
+            }
             return View(products);
         }
         
         public IActionResult Details(int ProductId)
         {
            
-            Product product = _unitOfWork.product.Get(u=>u.Id == ProductId, includeProperties: "Category");
+            Product product = _unitOfWork.product.Get(u=>u.Id == ProductId, includeProperties: "Category,ProductImages");
             if (product == null)
             {
                 return NotFound();
             }
+
             ShoppingCard shopping = new()
             {
                 Product = product,
@@ -43,7 +51,11 @@ namespace Saul.Areas.Customer.Controllers
                 
             };
 
-           
+            if (shopping.Product.ProductImages == null)
+            {
+                shopping.Product.ProductImages = new List<ProductImage>();
+            }
+
             return View(shopping);
         }
 

@@ -22,7 +22,32 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
-                        <img src="@Model.Product.ImageURL" width="100%" class="rounded" />
+                        @if (@Model.Product.ProductImages != null && @Model.Product.ProductImages.Count > 0)
+                        {
+                            <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    @foreach (var item in Model.Product.ProductImages.Select((Image, Index) => new { Image, Index }))
+                                    {
+                                        <div class="@(item.Index == 0 ? "carousel-item active" : "carousel-item")">
+                                            <img src="@item.Image.ImageURL" class="d-block w-100 fixed-image rounded">
+                                        </div>
+                                    }
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        }
+                        else
+                        {
+                            <img src="https://via.placeholder.com/500x600" width="100%" class="card-img-top rounded img-fluid fixed-image" />
+
+                        }
                     </div>
                     <div class="col-12 col-lg-6 offset-lg-1">
 
@@ -85,9 +110,9 @@
                         </div>
                         <div class="row">
                             <div class="col-12 col-md-6 pb-1">
-                                <button type="submit" 
+                                <button type="submit"
                                         class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold">
-                                    Add to Cart 
+                                    Add to Cart
                                 </button>
                             </div>
                         </div>
